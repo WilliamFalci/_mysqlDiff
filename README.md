@@ -56,3 +56,17 @@ $sql = $test->sql;
               'ofh' => fopen('serverDirOutputPath + outputFileName', 'w'), // output file handle
   );
 ```
+## EXAMPLE SQL OUTPUT:
+
+```
+SET FOREIGN_KEY_CHECKS = 0;
+SET SQL_MODE = '';
+USE `TEST_2`;
+
+ALTER TABLE `company` ADD COLUMN `test` int(11) NOT NULL auto_increment AFTER `company_id`;
+ALTER TABLE `prova1` DROP COLUMN `prova_name`;
+CREATE UNIQUE INDEX test_key ON `company` (company_id,test);
+CREATE INDEX test ON `company` (test);
+CREATE INDEX test_2 ON `company` (test);
+SET FOREIGN_KEY_CHECKS = 1;
+```
