@@ -13,7 +13,7 @@ Declare new mysqlDiff()
 Invoke the function analyzeDiff($options);
 
 OPTIONS STRUCTURE:
-
+```
  $options = (object) array(
               'drop_columns' => TRUE,
               'drop_tables' => TRUE,
@@ -36,3 +36,4 @@ OPTIONS STRUCTURE:
               'overwrite' => TRUE,
               'ofh' => fopen('serverDirOutputPath + outputFileName', 'w'), // output file handle
   );
+```
