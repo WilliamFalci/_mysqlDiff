@@ -43,28 +43,23 @@ class _mysqlDiff {
 
     if ($db2->schema) {
         if (!file_exists($db1->schema))
-            error("schema file 2 does not exist");
+            $this->error("schema file 2 does not exist");
         $db2->database = "tmp_schema_" . uniqid();
     }
 
     if ($db1->host == $db2->host && $db1->database == $db2->database && !$db1->schema && !$db2->schema)
         $this->error("databases names must be different if they reside on the same host");
 
-    if ($options->output_file) {
-        if (file_exists($options->output_file) && !$options->overwrite) {
-            if (prompt("Output file $options->output_file exists. Overwrite it (y/n)? ") != 'y')
-                exit(0);
-        }
-        $options->ofh = @fopen($options->output_dir . $options->output_file, 'w') or error("error creating output file $options->output_file");
-    }
 
-    $db1->link = mysqli_connect($db1->host, $db1->user, $db1->pwd) or error('Connection 1 failed');
+    $options->ofh = @fopen($options->output_dir . $options->output_file, 'w') or $this->error("error creating output file $options->output_file");
+
+    $db1->link = mysqli_connect($db1->host, $db1->user, $db1->pwd) or $this->error('Connection 1 failed');
     $this->create_schema_db($db1);   
-    mysqli_select_db($db1->link, $db1->database) or error(mysqli_error($db1->link));
+    mysqli_select_db($db1->link, $db1->database) or $this->error(mysqli_error($db1->link));
 
-    $db2->link = mysqli_connect($db2->host, $db2->user, $db2->pwd) or error('Connection 2 failed');
+    $db2->link = mysqli_connect($db2->host, $db2->user, $db2->pwd) or $this->error('Connection 2 failed');
     $this->create_schema_db($db2);
-    mysqli_select_db($db2->link, $db2->database) or error(mysqli_error($db2->link));
+    mysqli_select_db($db2->link, $db2->database) or $this->error(mysqli_error($db2->link));
 
     $this->load_schema_db($db1);
     $this->load_schema_db($db2);
@@ -94,7 +89,7 @@ class _mysqlDiff {
       if (!$db->schema)
           return;
       if (!mysqli_query($db->link, "create database {$db->database}"))
-          error('Error of create database ' . mysqli_error($db->link));
+          $this->error('Error of create database ' . mysqli_error($db->link));
   }
 
   function load_schema_db(&$db)
@@ -110,7 +105,7 @@ class _mysqlDiff {
           if (preg_match('/^\s*drop /i', $q))
               continue;
           if (!mysqli_query($db->link, $q))
-              error("Error in load schema db '$q'" . mysqli_error($db->link));
+              $this->error("Error in load schema db '$q'" . mysqli_error($db->link));
       }
   }
 
@@ -392,9 +387,8 @@ class _mysqlDiff {
           if ($t1->CHECKSUM != $t2->CHECKSUM)
               $sql .= "ALTER TABLE `$t` CHECKSUM=$t1->CHECKSUM;\n";
 
-          /* if ($t1->TABLE_COMMENT != $t2->TABLE_COMMENT)
+           if ($t1->TABLE_COMMENT != $t2->TABLE_COMMENT)
             $sql .= "ALTER TABLE `$t` COMMENT='$t1->TABLE_COMMENT';\n";
-           */
 
           if ($sql)
               $sql .= "\n";
