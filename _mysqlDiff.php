@@ -78,7 +78,7 @@ class _mysqlDiff {
     $this->drop_schema_db($db1);
     $this->drop_schema_db($db2);
 
-    $this->sqll= file_get_contents( $options->output_dir . $options->output_file );
+    $this->sql= file_get_contents( $options->output_dir . $options->output_file );
     return $this;
   }
   
