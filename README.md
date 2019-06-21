@@ -20,7 +20,7 @@ In case of create tables statements with fk, the order of creation table is auto
 
 ### Example:
 ```
-require_once 'yourfullpath/mysqlDiff/mysqldiff.php';
+require_once 'yourpath/mysqlDiff/mysqldiff.php';
 $test = new _mysqlDiff();
 $test->analyzeDiff($options);
 ```
@@ -79,7 +79,7 @@ SET FOREIGN_KEY_CHECKS = 1;
 ```
 ## APPLY SQL FILE:
 ```
-require_once 'yourfullpath/mysqlDiff/sqlimport.php';
+require_once 'yourpath/mysqlDiff/sqlimport.php';
 
 use Daveismyname\SqlImport\Import;
 
