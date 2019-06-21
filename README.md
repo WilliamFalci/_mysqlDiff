@@ -14,11 +14,13 @@ In case of create tables statements with fk, the order of creation table is auto
 ## BASIC USAGE:
 
 * Create a directory with the 3 files: mysqldiff.php, sqlparser.php, sqlimport.php
+* require mysqldiff.php (the sqlparser class is already required inside the mysqldiff.php)
 * Declare new mysqlDiff()
 * Invoke the function analyzeDiff($options);
 
 ### Example:
 ```
+require_once 'yourfullpath/mysqlDiff/mysqldiff.php';
 $test = new _mysqlDiff();
 $test->analyzeDiff($options);
 ```
@@ -77,6 +79,8 @@ SET FOREIGN_KEY_CHECKS = 1;
 ```
 ## APPLY SQL FILE:
 ```
+require_once 'yourfullpath/mysqlDiff/sqlimport.php';
+
 use Daveismyname\SqlImport\Import;
 
 $filename = 'FULLFILEPATH';
