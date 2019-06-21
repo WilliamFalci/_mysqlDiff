@@ -1,9 +1,13 @@
 <?
+require_once 'sqlparser.php';
+use iamcal\SQLParser;
+
 $options = '';
 
 class _mysqlDiff {
   var $sql;
   var $options;
+  var $creation_tables = [];
   
   function __costruct(){
     $this->options ='';
@@ -195,8 +199,9 @@ class _mysqlDiff {
       foreach ($table_names as $t) {
           $sql .= $this->get_create_table_sql($t, $db1) . ";\n\n";
       }
-
-      fputs($options->ofh, $sql);
+      
+      array_push($this->creation_tables,$sql);
+      //fputs($options->ofh, $sql);
   }
 
   function format_default_value($value, $db)
@@ -534,6 +539,33 @@ class _mysqlDiff {
       $tables2 = $this->list_tables($db2);
 
       $this->create_tables($db1, $tables1, $tables2);
+    
+      $sql= '';
+      
+    
+      if(is_array($this->creation_tables) && count($this->creation_tables) > 0){
+        $parser = new SQLParser();
+        $parser->parse($this->creation_tables[0]);
+
+        $orderedSQL = $parser->tables;
+
+        foreach($parser->tables as $table_name=>$statements){
+          if(isset($parser->tables[$table_name]['indexes'])){
+
+            foreach($parser->tables[$table_name]['indexes'] as $index){
+              if($index['type'] == 'FOREIGN'){
+                $orderedSQL = array_swap($table_name,$index['ref_table'], $orderedSQL);
+              }
+            }
+          }
+        }
+
+        foreach($orderedSQL as $create){
+          $sql.= $create['sql'] . "\n";
+        }
+
+        fputs($options->ofh, $sql);
+      }
 
       if ($options->drop_tables)
           $this->drop_tables($tables1, $tables2);
@@ -543,7 +575,7 @@ class _mysqlDiff {
 
       $this->process_indexes($tables1, $tables2, $db1, $db2);
 
-      $sql = "SET FOREIGN_KEY_CHECKS = 1;";
+      $sql= "SET FOREIGN_KEY_CHECKS = 1;";
       fputs($options->ofh, $sql);
   }
 
