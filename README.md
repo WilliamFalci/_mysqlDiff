@@ -9,7 +9,7 @@ mysqldiff is a PHP script that compares the schema of two MySQL databases
 and produces a sequence of MySQL statements to "alter" the second schema 
 to match the first one.
 
-In case of create tables statements with fk, the order of creation table is auto-reorder to match correctly the table's creation order.
+_**In case of create tables statements with fk, the order of creation table is auto-reorder to match correctly the table's creation order.**_
 
 ## BASIC USAGE:
 
