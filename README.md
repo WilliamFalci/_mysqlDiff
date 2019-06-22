@@ -50,20 +50,21 @@ $test->analyzeDiff($options);
               'overwrite' => TRUE,
               'ofh' => fopen('serverDirOutputPath + outputFileName', 'w'), // output file handle
   );
-  
+```
+
 ## OPTION'S EXPLANATION:
-[*] reset_auto_increment =>     If reset_auto_increment options is TRUE the class 
+* reset_auto_increment =>     If reset_auto_increment options is TRUE the class 
                                 will reset the auto_increment to 1 of all new tables 
                                 created (without change the auto_increment of all 
                                 other tables into the database)
                                 
-[*]drop-tables =>               Whether to generate DROP TABLE statements
+* drop-tables =>               Whether to generate DROP TABLE statements
                                 for tables present in destination but not
                                 on source database.
                                 Note this can happen when you simply rename
                                 a table. Default is NOT TO DROP.
                                 
-[*]drop-columns =>              Whether to generate ALTER TABLE...DROP COLUMN
+* drop-columns =>              Whether to generate ALTER TABLE...DROP COLUMN
                                 statements for columns present in destination
                                 but not on source database.
                                 Note this can happen when you simply rename
