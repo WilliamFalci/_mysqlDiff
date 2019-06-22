@@ -50,6 +50,18 @@ $test->analyzeDiff($options);
               'ofh' => fopen('serverDirOutputPath + outputFileName', 'w'), // output file handle
   );
 ```
+```
+  --drop-tables                 Whether to generate DROP TABLE statements
+                                for tables present in destination but not
+                                on source database.
+                                Note this can happen when you simply rename
+                                a table. Default is NOT TO DROP.
+  --drop-columns                Whether to generate ALTER TABLE...DROP COLUMN
+                                statements for columns present in destination
+                                but not on source database.
+                                Note this can happen when you simply rename
+                                a column. Default is NOT TO DROP.
+```
 
 ### if you want print the result (the result will show the options parsed and the sql builded):
 ```
