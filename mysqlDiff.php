@@ -541,6 +541,7 @@ class _mysqlDiff {
       $this->create_tables($db1, $tables1, $tables2);
     
       $sql= '';
+      $sql_reset_auto_increment= '';
       
     
       if(is_array($this->creation_tables) && count($this->creation_tables) > 0){
@@ -548,14 +549,20 @@ class _mysqlDiff {
         $parser->parse($this->creation_tables[0]);
 
         $orderedSQL = $parser->tables;
-
+            
         foreach($parser->tables as $table_name=>$statements){
           if(isset($parser->tables[$table_name]['indexes'])){
 
             foreach($parser->tables[$table_name]['indexes'] as $index){
-              if($index['type'] == 'FOREIGN'){
-                $orderedSQL = array_swap($table_name,$index['ref_table'], $orderedSQL);
-              }
+              switch ($index['type']){
+                case 'FOREIGN':
+                  $orderedSQL = array_swap($table_name,$index['ref_table'], $orderedSQL);
+                break;
+                case 'PRIMARY':
+                  if($this->options->reset_auto_increment == TRUE)           
+                    $sql_reset_auto_increment.= "ALTER TABLE $table_name AUTO_INCREMENT = 1;\n";
+                break;
+              } 
             }
           }
         }
@@ -574,6 +581,10 @@ class _mysqlDiff {
       $this->alter_tables_columns($db1, $db2);
 
       $this->process_indexes($tables1, $tables2, $db1, $db2);
+    
+
+      if($this->options->reset_auto_increment == TRUE)
+        fputs($options->ofh, $sql_reset_auto_increment);
 
       $sql= "SET FOREIGN_KEY_CHECKS = 1;";
       fputs($options->ofh, $sql);
